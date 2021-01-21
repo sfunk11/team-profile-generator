@@ -4,13 +4,53 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+function getEmployeeType(){
+inquirer.prompt([
+    {
+        type: "list",
+        name: "employeeType",
+        message: "Please select the type of employee you would like to add.",
+        choices: ["Manager", "Engineer", "Intern"],
+    }
+]).then((data) => {
+    switch (data.employeeType) {
+       case "Manager":
+           console.log( "ok...a manager.");
+           return createManager();
+       case "Engineer":
+           return createEngineer();
+       case "Intern":
+           return createIntern();
+    }
+})
+}
 
+function requestName(){
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "employeeName",
+            message: "What is their name?", 
+        }
+    ]).then((data) =>  {
+        return data.EmployeeName})
+    .catch((err) => console.log(err));
+}
+
+function createManager(){
+    manager = new Manager();
+    manager.name = requestName();
+    console.log(manager);
+}
+
+getEmployeeType();
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
