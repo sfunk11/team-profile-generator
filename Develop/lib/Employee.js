@@ -1,4 +1,3 @@
-const inquirer = require("inquirer");
 class Employee{
     constructor (name,id, email) {
         this.name = name;
@@ -15,7 +14,7 @@ class Employee{
         return this.email;
     }
     getRole(){
-        return "Employee"
+        return "Employee";
     }
  }
 
