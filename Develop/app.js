@@ -93,7 +93,7 @@ async function requestGitHub(){
     .catch((err) => console.log(err));
 }
 
-async function requestSchool()){
+async function requestSchool(){
     return await inquirer.prompt([ 
         {
             type: "input",
