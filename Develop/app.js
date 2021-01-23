@@ -23,7 +23,9 @@ inquirer.prompt([
     switch (data.employeeType) {
        case "Manager":
            console.log( "ok...a manager.");
-           return createManager();
+           manager = createManager();
+           console.log(manager);
+           break;
        case "Engineer":
            return createEngineer();
        case "Intern":
@@ -33,24 +35,63 @@ inquirer.prompt([
 }
 
 function requestName(){
-    inquirer.prompt([
+    inquirer.prompt([ 
         {
             type: "input",
             name: "employeeName",
             message: "What is their name?", 
         }
     ]).then((data) =>  {
-        return data.EmployeeName})
+        return data.employeeName})
+    .catch((err) => console.log(err));
+}
+
+function requestId(){
+    inquirer.prompt([ 
+        {
+            type: "input",
+            name: "employeeId",
+            message: "What is their id number?", 
+        }
+    ]).then((data) =>  {
+        return data.employeeId})
+    .catch((err) => console.log(err));
+}
+
+function requestEmail(){
+    inquirer.prompt([ 
+        {
+            type: "input",
+            name: "employeeEmail",
+            message: "What is their email address?", 
+        }
+    ]).then((data) =>  {
+        return data.employeeEmail})
+    .catch((err) => console.log(err));
+}
+function requestOffice(){
+    inquirer.prompt([ 
+        {
+            type: "input",
+            name: "employeeOffice",
+            message: "What is their office number?", 
+        }
+    ]).then((data) =>  {
+        return data.employeeOffice})
     .catch((err) => console.log(err));
 }
 
 function createManager(){
     manager = new Manager();
     manager.name = requestName();
-    console.log(manager);
-}
+    manager.id = requestId();
+    manager.email = requestEmail();
+    manafer.officeNumber = requestOffice();
+    return manager;
+};
 
-getEmployeeType();
+getEmployeeType()
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
