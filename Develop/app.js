@@ -93,6 +93,18 @@ async function requestGitHub(){
     .catch((err) => console.log(err));
 }
 
+async function requestSchool()){
+    return await inquirer.prompt([ 
+        {
+            type: "input",
+            name: "employeeSchool",
+            message: "What school do they attend?", 
+        }
+    ]).then((data) =>  {
+        return data.employeeSchool})
+    .catch((err) => console.log(err));
+}
+
 async function createManager(){
     manager = new Manager();
     manager.name = await requestName();
@@ -110,6 +122,15 @@ async function createEngineer(){
     engineer.email = await requestEmail();
     engineer.github = await requestGitHub();
     console.log(engineer);
+}
+
+async function createIntern(){
+    intern = new Intern();
+    intern.name = await requestName();
+    intern.id = await requestId();
+    intern.email = await requestEmail();
+    intern.school = await requestSchool();
+    console.log(intern);
 }
 
 getEmployeeType()
