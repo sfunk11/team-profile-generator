@@ -23,9 +23,8 @@ inquirer.prompt([
     switch (data.employeeType) {
        case "Manager":
            console.log( "ok...a manager.");
-           manager = createManager();
-           console.log(manager);
-           break;
+           const manager = createManager();
+           return manager;
        case "Engineer":
            return createEngineer();
        case "Intern":
@@ -34,8 +33,8 @@ inquirer.prompt([
 })
 }
 
-function requestName(){
-    inquirer.prompt([ 
+async function requestName(){
+    return await inquirer.prompt([ 
         {
             type: "input",
             name: "employeeName",
@@ -46,8 +45,8 @@ function requestName(){
     .catch((err) => console.log(err));
 }
 
-function requestId(){
-    inquirer.prompt([ 
+async function requestId(){
+    return await inquirer.prompt([ 
         {
             type: "input",
             name: "employeeId",
@@ -58,8 +57,8 @@ function requestId(){
     .catch((err) => console.log(err));
 }
 
-function requestEmail(){
-    inquirer.prompt([ 
+async function requestEmail(){
+    return await inquirer.prompt([ 
         {
             type: "input",
             name: "employeeEmail",
@@ -69,8 +68,9 @@ function requestEmail(){
         return data.employeeEmail})
     .catch((err) => console.log(err));
 }
-function requestOffice(){
-    inquirer.prompt([ 
+
+async function requestOffice(){
+    return await inquirer.prompt([ 
         {
             type: "input",
             name: "employeeOffice",
@@ -81,14 +81,36 @@ function requestOffice(){
     .catch((err) => console.log(err));
 }
 
-function createManager(){
+async function requestGitHub(){
+    return await inquirer.prompt([ 
+        {
+            type: "input",
+            name: "employeeGitHub",
+            message: "What is their GitHub username?", 
+        }
+    ]).then((data) =>  {
+        return data.employeeGitHub})
+    .catch((err) => console.log(err));
+}
+
+async function createManager(){
     manager = new Manager();
-    manager.name = requestName();
-    manager.id = requestId();
-    manager.email = requestEmail();
-    manafer.officeNumber = requestOffice();
-    return manager;
+    manager.name = await requestName();
+    manager.id = await requestId();
+    manager.email = await requestEmail();
+    manager.officeNumber = await requestOffice();
+    console.log(manager);
+    return await manager;
 };
+
+async function createEngineer(){
+    engineer = new Engineer();
+    engineer.name = await requestName();
+    engineer.id = await requestId();
+    engineer.email = await requestEmail();
+    engineer.github = await requestGitHub();
+    console.log(engineer);
+}
 
 getEmployeeType()
 
