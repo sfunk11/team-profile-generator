@@ -11,129 +11,81 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-function getEmployeeType(){
-inquirer.prompt([
-    {
-        type: "list",
-        name: "employeeType",
-        message: "Please select the type of employee you would like to add.",
-        choices: ["Manager", "Engineer", "Intern"],
-    }
-]).then((data) => {
-    switch (data.employeeType) {
-       case "Manager":
-           console.log( "ok...a manager.");
-           const manager = createManager();
-           return manager;
-       case "Engineer":
-           return createEngineer();
-       case "Intern":
-           return createIntern();
-    }
-})
-}
+const teamProfile = [];
 
-async function requestName(){
-    return await inquirer.prompt([ 
+function createEmployee() {
+    inquirer.prompt([{
+            type: "list",
+            name: "employeeType",
+            message: "Please select the type of employee you would like to add.",
+            choices: ["Manager", "Engineer", "Intern"],
+        },
         {
             type: "input",
             name: "employeeName",
-            message: "What is their name?", 
-        }
-    ]).then((data) =>  {
-        return data.employeeName})
-    .catch((err) => console.log(err));
-}
-
-async function requestId(){
-    return await inquirer.prompt([ 
+            message: "What is their name?",
+        },
         {
             type: "input",
             name: "employeeId",
-            message: "What is their id number?", 
-        }
-    ]).then((data) =>  {
-        return data.employeeId})
-    .catch((err) => console.log(err));
-}
-
-async function requestEmail(){
-    return await inquirer.prompt([ 
+            message: "What is their id number?",
+        },
         {
             type: "input",
             name: "employeeEmail",
-            message: "What is their email address?", 
+            message: "What is their email address?",
         }
-    ]).then((data) =>  {
-        return data.employeeEmail})
-    .catch((err) => console.log(err));
-}
-
-async function requestOffice(){
-    return await inquirer.prompt([ 
-        {
-            type: "input",
-            name: "employeeOffice",
-            message: "What is their office number?", 
+    ]).then(({employeeType, employeeName, employeeId, employeeEmail}) => {
+            let special = "";
+            if (employeeType === "Manager") {
+                special = "office number";
+            } else if (employeeType === "Engineer") {
+                special = "gitHub username";
+            } else {
+                special = "school name";
+            };
+            return inquirer.prompt([{
+                    type: "input",
+                    name: "roleSpecific",
+                    message: `What is their ${special}?`,
+                },
+                {
+                    type: "List",
+                    name: "anotherEmployee",
+                    message: "Do you want to add another team member?",
+                    choices: ["Yes", "No"]
+                }
+            ]).then(({
+                roleSpecific,
+                anotherEmployee
+            }) => {
+                if (employeeType === "Engineer") {
+                    let employee = new Engineer(employeeName, employeeId, employeeEmail, roleSpecific);
+                    teamProfile.push(employee);
+                    console.table(teamProfile);
+                } else if (employeeType === "Intern") {
+                    let employee = new Intern(employeeName, employeeId, employeeEmail, roleSpecific);
+                    teamProfile.push(employee);
+                    console.table(teamProfile);
+                } else {
+                    let employee = new Manager(employeeName, employeeId, employeeEmail, roleSpecific)
+                    teamProfile.push(employee);
+                    console.table(teamProfile);
+                }
+                if (anotherEmployee === "Yes") {
+                    createEmployee();
+                } else {
+                    htmlFile = render(teamProfile);
+                    fs.writeFile(outputPath, htmlFile, function (err) {
+                        if (err) return console.log(err);
+                        console.log('Profile page has been generated.');
+                    })
+                }
+            })
         }
-    ]).then((data) =>  {
-        return data.employeeOffice})
-    .catch((err) => console.log(err));
-}
+    )};
 
-async function requestGitHub(){
-    return await inquirer.prompt([ 
-        {
-            type: "input",
-            name: "employeeGitHub",
-            message: "What is their GitHub username?", 
-        }
-    ]).then((data) =>  {
-        return data.employeeGitHub})
-    .catch((err) => console.log(err));
-}
-
-async function requestSchool(){
-    return await inquirer.prompt([ 
-        {
-            type: "input",
-            name: "employeeSchool",
-            message: "What school do they attend?", 
-        }
-    ]).then((data) =>  {
-        return data.employeeSchool})
-    .catch((err) => console.log(err));
-}
-
-async function createManager(){
-    manager = new Manager();
-    manager.name = await requestName();
-    manager.id = await requestId();
-    manager.email = await requestEmail();
-    manager.officeNumber = await requestOffice();
-    console.log(manager);
-    return await manager;
-};
-
-async function createEngineer(){
-    engineer = new Engineer();
-    engineer.name = await requestName();
-    engineer.id = await requestId();
-    engineer.email = await requestEmail();
-    engineer.github = await requestGitHub();
-    console.log(engineer);
-}
-
-async function createIntern(){
-    intern = new Intern();
-    intern.name = await requestName();
-    intern.id = await requestId();
-    intern.email = await requestEmail();
-    intern.school = await requestSchool();
-    console.log(intern);
-}
-
-getEmployeeType()
+createEmployee()
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)

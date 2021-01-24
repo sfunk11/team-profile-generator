@@ -1,4 +1,5 @@
 const Employee = require("./Employee.js");
+const inquirer = require("inquirer");
 
 class Intern extends Employee{
     constructor(name,id,email,school){
@@ -14,3 +15,4 @@ class Intern extends Employee{
 }
 
 module.exports = Intern;
+
